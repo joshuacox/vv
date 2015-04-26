@@ -1,0 +1,11 @@
+#!/bin/bash
+# this is a wrapper script that shows
+# time info and beeps after said thing is done
+# and nice and ionice for niceness
+/usr/bin/time -v nice ionice -c3 $@
+#beeper
+# indicate we moved on to sync
+echo "now syncing"
+# and time the sync so we know how much the kernel was hiding from us
+time sync
+ogg123 /usr/share/sounds/KDE-Im-Irc-Event.ogg
