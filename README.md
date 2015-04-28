@@ -16,25 +16,25 @@ vv apt-get upgrade -y
 or
 
 ```
-vv dd if=/dev/zero of=/tmp/testfile bs=1M count=401
-401+0 records in
-401+0 records out
-420478976 bytes (420 MB) copied, 0.0954823 s, 4.4 GB/s
-        Command being timed: "nice ionice -c3 dd if=/dev/zero of=/tmp/testfile bs=1M count=401"
+vv dd if=/dev/zero of=/tmp/testfile bs=1M count=4010     
+4010+0 records in
+4010+0 records out
+4204789760 bytes (4.2 GB) copied, 0.852751 s, 4.9 GB/s
+        Command being timed: "nice ionice -c3 dd if=/dev/zero of=/tmp/testfile bs=1M count=4010"
         User time (seconds): 0.00
-        System time (seconds): 0.11
+        System time (seconds): 0.87
         Percent of CPU this job got: 99%
-        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.11
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.87
         Average shared text size (kbytes): 0
         Average unshared data size (kbytes): 0
         Average stack size (kbytes): 0
         Average total size (kbytes): 0
-        Maximum resident set size (kbytes): 3032
+        Maximum resident set size (kbytes): 2872
         Average resident set size (kbytes): 0
         Major (requiring I/O) page faults: 0
-        Minor (reclaiming a frame) page faults: 463
+        Minor (reclaiming a frame) page faults: 459
         Voluntary context switches: 1
-        Involuntary context switches: 13
+        Involuntary context switches: 12
         Swaps: 0
         File system inputs: 0
         File system outputs: 0
@@ -44,9 +44,9 @@ vv dd if=/dev/zero of=/tmp/testfile bs=1M count=401
         Page size (bytes): 4096
         Exit status: 0
 
-real    0m0.035s
+real    0m0.082s
 user    0m0.000s
-sys     0m0.008s
+sys     0m0.012s
 
 Audio Device:   Advanced Linux Sound Architecture (ALSA) output
 
