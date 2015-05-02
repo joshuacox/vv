@@ -13,7 +13,7 @@ e.g.
 ```
 vv apt-get upgrade -y
 ```
-or
+or (I’ll give some example output in this one)
 
 ```
 vv dd if=/dev/zero of=/tmp/testfile bs=1M count=4010     
@@ -54,4 +54,22 @@ Playing: /usr/share/sounds/KDE-Im-Irc-Event.ogg
 Ogg Vorbis stream: 2 channel, 48000 Hz
                                                                                 
 Done.
+```
+
+### notes, caveats, troubleshooting
+
+There are some escaping issues that can be uncovered by throwing lot’s of interpretation snafu at it in $@
+i.e. I imagine I’ll have to throw some escape trickery in there at some point.  I’ll fix it when I run into one of those cases, but for now I’m using this daily without issue.
+I’m open to suggestions on better encapsulation inside the script
+
+some examples of how it might get borked are here:
+http://unix.stackexchange.com/questions/57830/trouble-in-script-with-spaces-in-filename
+
+e.g. this works fine
+```
+vv sudo cp -a 'VirtualBox VMs' /mnt/virtualbox/
+```
+but this does not
+```
+vv sudo cp -a VirtualBox\ VMs /mnt/virtualbox/
 ```

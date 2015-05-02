@@ -2,7 +2,7 @@
 # this is a wrapper script that shows
 # time info and beeps after said thing is done
 # and nice and ionice for niceness
-/usr/bin/time -v nice ionice -c3 $@
+/usr/bin/time -v nice ionice -c3 "$@"
 # indicate we moved on to sync
 # silence is best I believe commenting out the echo for now
 # echo "now syncing"
