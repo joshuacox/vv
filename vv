@@ -4,8 +4,7 @@
 # and nice and ionice for niceness
 /usr/bin/time -v nice ionice -c3 "$@"
 # indicate we moved on to sync
-# silence is best I believe commenting out the echo for now
-# echo "now syncing"
+echo "now syncing"
 # and time the sync so we know how much the kernel was hiding from us
 time sync
 #beeper
