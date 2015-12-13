@@ -16,7 +16,7 @@
     <header>
       <div class="container">
         <h1>Vv</h1>
-        <h2>VV - the command line wrapper for long running tasks</h2>
+        <h2>VV is a wrapper for command line tasks, it&#39;s most important feature is that it makes a noise when it is done, allowing me to background and do something else while the task completes, then I generally wrap some nice and ionice and /usr/bin/time -v into the command to make it nice and give me an idea of how long it took.  I added the time sync, to let me know how much of the above the kernel is trying to hide from me as well (of course the sync may reflect something else going on in the system, in any case I think it&#39;s a good idea to let the discs sync in general before other things commence and no need to alert me till afterwards)</h2>
 
         <section id="downloads">
           <a href="https://github.com/joshuacox/vv/zipball/master" class="btn">Download as .zip</a>
@@ -38,8 +38,40 @@
 <h2>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
 
+<p>Trust me?</p>
+
+<pre><code>curl https://raw.githubusercontent.com/joshuacox/vv/master/bootstrapvv.sh|bash
+</code></pre>
+
+<p>But I recommend you clone the repo and read it first, it’s pretty short</p>
+
+<p>then at your leisure</p>
+
 <p><code>cp vv /usr/local/bin</code>
 or somewhere in your path</p>
+
+<p>alternatively if you want to install it to <code>/usr/local/bin/</code> then</p>
+
+<pre><code>sudo make install
+</code></pre>
+
+<p>or you can add hosts to a vv list in your ansible hosts file like so</p>
+
+<pre><code>examplehost1 ansible_ssh_port=2222 ansible_ssh_host=1.2.3.4 ansible_ssh_user=root
+examplehost2 ansible_ssh_port=2222 ansible_ssh_host=1.2.3.5 ansible_ssh_user=root
+
+[vv]
+exampleHost1
+exampleHost2
+</code></pre>
+
+<p>and use ansible to install to those hosts</p>
+
+<pre><code>make play
+</code></pre>
+
+<p>look at the included Makefile (as you should every Makefile for that matter before you <code>sudo make anything</code>)
+it merely uses the install command to copy the vv script to <code>/usr/local/bin</code> with mode 0755</p>
 
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -111,6 +143,8 @@ I’m open to suggestions on better encapsulation inside the script</p>
 
 <pre><code>vv sudo cp -a VirtualBox\ VMs /mnt/virtualbox/
 </code></pre>
+
+<p><a href="http://joshuacox.github.io/vv">http://joshuacox.github.io/vv</a></p>
       </section>
     </div>
 
@@ -120,7 +154,7 @@ I’m open to suggestions on better encapsulation inside the script</p>
           </script>
           <script type="text/javascript">
             try {
-              var pageTracker = _gat._getTracker("UA-63021030-4");
+              var pageTracker = _gat._getTracker("UA-69335315-1");
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
