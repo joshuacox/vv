@@ -12,3 +12,5 @@ usrlocalbin:
 
 playbook:
 	ansible-playbook vv.yaml
+
+play: playbook
