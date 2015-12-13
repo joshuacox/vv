@@ -1,0 +1,4 @@
+- name: dockersupport 
+  hosts: vv
+  tasks:
+  - script: bootstrapdockersupport.sh  creates=/root/dockersupportbootstrapped.txt

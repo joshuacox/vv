@@ -9,3 +9,6 @@ install: usrlocalbin
 
 usrlocalbin:
 	install --mode=0755 vv /usr/local/bin/vv
+
+playbook:
+	ansible-playbook vv.yaml
