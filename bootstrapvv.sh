@@ -1,9 +1,10 @@
 #!/bin/sh
-GIT_HOME=~/git
+TMP_DIR=$(mktemp -d --suffix='.bomsaway')
 
-echo vv
-cd $GIT_HOME
+cd $TMP_DIR
 git clone https://github.com/joshuacox/vv.git
 cd vv
 git pull
 make install
+cd
+rm -Rf $TMP_DIR
