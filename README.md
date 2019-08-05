@@ -8,7 +8,7 @@ notes: I imagine there are some escaping issues that could be uncovered by throw
 Trust me?
 
 ```
-curl https://raw.githubusercontent.com/joshuacox/vv/master/bootstrapvv.sh|bash
+curl https://raw.githubusercontent.com/joshuacox/vv/master/bootstrapvv.sh | bash
 ```
 
 But I recommend you clone the repo and read it first, it’s pretty short
