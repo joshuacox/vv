@@ -5,10 +5,11 @@ srcr () {
     source ${TARGET}
   fi
 }
-
 srcr ~/.vvrc
 srcr ~/.vv/config
 srcr ~/.config/vv/config
+
+# Overrideable vars
 : ${VV_NICENESS:="19"}
 : ${VV_IO_NICENESS:="3"}
 # change the PRE COMMAND
@@ -19,6 +20,7 @@ srcr ~/.config/vv/config
   /usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga
   /usr/share/sounds/Oxygen-Im-Sms.ogg
   '}
+
 alertr () {
   if [ -z ${VV_PLAYER+x} ]; then 
     if command -v cvlc 2>&1 >/dev/null; then
@@ -70,7 +72,6 @@ echo "now syncing"
 time sync
 #beeper
 }
-
 
 vvr $@
 alertr

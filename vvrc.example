@@ -1,0 +1,9 @@
+#!/bin/bash
+VV_NICENESS="11"
+VV_IO_NICENESS="2"
+# change the PRE COMMAND
+VV_PRE="/usr/bin/time -v nice -n${VV_NICENESS} ionice -c${VV_IO_NICENESS}"
+# you could alter the list of play files
+VV_LIST_FILES='/usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga'
+# or just set the playfile
+VV_PLAYFILE='/usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga'
