@@ -1,45 +1,61 @@
 #!/bin/bash
-alertr () {
-  LIST_FILES='/usr/share/sounds/gnome/default/alerts/string.ogg
+srcr () {
+  TARGET=$1
+  if [[ -f ${TARGET} ]]; then
+    source ${TARGET}
+  fi
+}
+
+srcr ~/.vvrc
+srcr ~/.vv/config
+srcr ~/.config/vv/config
+: ${VV_NICENESS:="19"}
+: ${VV_IO_NICENESS:="3"}
+# change the PRE COMMAND
+: ${VV_PRE:="/usr/bin/time -v nice -n${VV_NICENESS} ionice -c${VV_IO_NICENESS} "}
+: ${VV_LIST_FILES:='/usr/share/sounds/gnome/default/alerts/string.ogg
   /usr/share/sounds/gnome/default/alerts/click.ogg
   /usr/share/sounds/oxygen/stereo/game-over-winner.ogg
   /usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga
   /usr/share/sounds/Oxygen-Im-Sms.ogg
-  '
-  if command -v cvlc 2>&1 >/dev/null; then
-    PLAYER="cvlc --no-loop --no-repeat --play-and-exit"
-  elif command -v ogg123 2>&1 >/dev/null; then
-    PLAYER=ogg123
-  elif command -v mplayer 2>&1 >/dev/null; then
-    PLAYER=mplayer
-    cvlc --no-loop --no-repeat --play-and-exit
-  else
-    echo 'WARN: no player found!'
+  '}
+alertr () {
+  if [ -z ${VV_PLAYER+x} ]; then 
+    if command -v cvlc 2>&1 >/dev/null; then
+      VV_PLAYER="cvlc --no-loop --no-repeat --play-and-exit"
+    elif command -v ogg123 2>&1 >/dev/null; then
+      VV_PLAYER=ogg123
+    elif command -v mplayer 2>&1 >/dev/null; then
+      VV_PLAYER=mplayer
+      cvlc --no-loop --no-repeat --play-and-exit
+    else
+      echo 'WARN: no player found!'
+    fi
   fi
-  if [[ ${PLAYER} == 'cvlc' ]]; then
-    LIST_FILES="/usr/share/sounds/alsa/Front_Center.wav 
-    $LIST_FILES"
-  elif [[ ${PLAYER} == 'mplayer' ]]; then
-    LIST_FILES="/usr/share/sounds/alsa/Front_Center.wav 
-    $LIST_FILES"
-  elif [[ ${PLAYER} == 'ogg123' ]]; then
-    LIST_FILES='/usr/share/sounds/oxygen/stereo/game-over-winner.ogg
+  if [[ ${VV_PLAYER} == 'cvlc' ]]; then
+    VV_LIST_FILES="/usr/share/sounds/alsa/Front_Center.wav 
+    $VV_LIST_FILES"
+  elif [[ ${VV_PLAYER} == 'mplayer' ]]; then
+    VV_LIST_FILES="/usr/share/sounds/alsa/Front_Center.wav 
+    $VV_LIST_FILES"
+  elif [[ ${VV_PLAYER} == 'ogg123' ]]; then
+    VV_LIST_FILES='/usr/share/sounds/oxygen/stereo/game-over-winner.ogg
     /usr/share/sounds/Oxygen-Im-Sms.ogg
     '
   fi
-  for i in ${LIST_FILES}; do
-    if [[ -f $i ]]; then
-      PLAYFILE=$i
-    else
-      echo 'WARN: no player_file found!'
-    fi
-  done
-  if [ -z ${PLAYER+x} ]; then 
+  if [ -z ${VV_PLAYFILE+x} ]; then 
+    for i in ${VV_LIST_FILES}; do
+      if [[ -f $i ]]; then
+        VV_PLAYFILE=$i
+      fi
+    done
+  fi
+  if [ -z ${VV_PLAYER+x} ]; then 
     echo 'no player found, not beeping'
-  elif [ -z ${PLAYFILE+x} ]; then 
-    echo 'no player file found, not beeping'
+  elif [ -z ${VV_PLAYFILE+x} ]; then 
+    echo 'no playerfile found, not beeping'
   else 
-    ${PLAYER} ${PLAYFILE}
+    ${VV_PLAYER} ${VV_PLAYFILE}
   fi
 }
 
@@ -47,7 +63,7 @@ vvr () {
 # this is a wrapper script that shows
 # time info and beeps after said thing is done
 # and nice and ionice for niceness
-/usr/bin/time -v nice ionice -c3 "$@"
+${VV_PRE} "$@"
 # indicate we moved on to sync
 echo "now syncing"
 # and time the sync so we know how much the kernel was hiding from us
@@ -55,15 +71,6 @@ time sync
 #beeper
 }
 
-srcr () {
-  TARGET=$1
-  if [[ -f ${TARGET} ]]; then
-    source ${TARGET}
-  fi
-}
-srcr ~/.vvrc
-srcr ~/.vv/config
-srcr ~/.config/vv/config
 
 vvr $@
 alertr
