@@ -1,9 +1,13 @@
 #!/bin/bash
-VV_NICENESS="11"
-VV_IO_NICENESS="2"
+: ${VV_IO_NICENESS:="2"}
 # change the PRE COMMAND
-VV_PRE="/usr/bin/time -v nice -n${VV_NICENESS} ionice -c${VV_IO_NICENESS}"
+: ${VV_PRE:="/usr/bin/time -v nice -n${VV_NICENESS} ionice -c${VV_IO_NICENESS}"}
 # you could alter the list of play files
-VV_LIST_FILES='/usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga'
+: ${VV_LIST_FILES:='/usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga'}
 # or just set the playfile
-VV_PLAYFILE='/usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga'
+: ${VV_PLAYFILE:='/usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga'}
+
+: ${VV_NICENESS:="11"}
+# unlike the above this next one cannot be overridden on the command line
+# so I will leave in commented out for those who fail to read this warning
+#VV_NICENESS="11"

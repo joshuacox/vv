@@ -46,9 +46,17 @@ it merely uses the install command to copy the vv script to `/usr/local/bin` wit
 ## Usage
 just place vv at the start of your command line
 e.g.
+
 ```
 vv apt-get upgrade -y
 ```
+
+With a differing niceness:
+
+```
+VV_NICENESS=10 vv echo one
+```
+
 or (I’ll give some example output in this one)
 
 ```
