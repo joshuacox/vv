@@ -1,4 +1,49 @@
 #!/bin/bash
+alertr () {
+  LIST_FILES='/usr/share/sounds/gnome/default/alerts/string.ogg
+  /usr/share/sounds/gnome/default/alerts/click.ogg
+  /usr/share/sounds/oxygen/stereo/game-over-winner.ogg
+  /usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga
+  /usr/share/sounds/Oxygen-Im-Sms.ogg
+  '
+  if command -v cvlc 2>&1 >/dev/null; then
+    PLAYER="cvlc --no-loop --no-repeat --play-and-exit"
+  elif command -v ogg123 2>&1 >/dev/null; then
+    PLAYER=ogg123
+  elif command -v mplayer 2>&1 >/dev/null; then
+    PLAYER=mplayer
+    cvlc --no-loop --no-repeat --play-and-exit
+  else
+    echo 'WARN: no player found!'
+  fi
+  if [[ ${PLAYER} == 'cvlc' ]]; then
+    LIST_FILES="/usr/share/sounds/alsa/Front_Center.wav 
+    $LIST_FILES"
+  elif [[ ${PLAYER} == 'mplayer' ]]; then
+    LIST_FILES="/usr/share/sounds/alsa/Front_Center.wav 
+    $LIST_FILES"
+  elif [[ ${PLAYER} == 'ogg123' ]]; then
+    LIST_FILES='/usr/share/sounds/oxygen/stereo/game-over-winner.ogg
+    /usr/share/sounds/Oxygen-Im-Sms.ogg
+    '
+  fi
+  for i in ${LIST_FILES}; do
+    if [[ -f $i ]]; then
+      PLAYFILE=$i
+    else
+      echo 'WARN: no player_file found!'
+    fi
+  done
+  if [ -z ${PLAYER+x} ]; then 
+    echo 'no player found, not beeping'
+  elif [ -z ${PLAYFILE+x} ]; then 
+    echo 'no player file found, not beeping'
+  else 
+    ${PLAYER} ${PLAYFILE}
+  fi
+}
+
+vvr () {
 # this is a wrapper script that shows
 # time info and beeps after said thing is done
 # and nice and ionice for niceness
@@ -8,4 +53,17 @@ echo "now syncing"
 # and time the sync so we know how much the kernel was hiding from us
 time sync
 #beeper
-ogg123 /usr/share/sounds/KDE-Im-Irc-Event.ogg
+}
+
+srcr () {
+  TARGET=$1
+  if [[ -f ${TARGET} ]]; then
+    source ${TARGET}
+  fi
+}
+srcr ~/.vvrc
+srcr ~/.vv/config
+srcr ~/.config/vv/config
+
+vvr $@
+alertr
