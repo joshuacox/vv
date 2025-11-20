@@ -1,4 +1,7 @@
 #!/bin/sh
+THIS_NAME=vv
+THIS_GH=joshuacox
+THIS_BRANCH=master
 TMP_DIR=$(mktemp -d --suffix='.vv')
 cleanup_func () {
   echo rm -Rf ${TMP}
@@ -6,9 +9,9 @@ cleanup_func () {
 trap cleanup_func EXIT
 
 cd $TMP_DIR
-curl -L -o vv-master.zip https://github.com/joshuacox/vv/archive/refs/heads/master.zip
-unzip vv-master.zip
-cd vv-master
+curl -L -o ${THIS_NAME}-${THIS_BRANCH}.zip https://github.com/${THIS_GH}/${THIS_NAME}/archive/refs/heads/${THIS_BRANCH}.zip
+unzip ${THIS_NAME}-${THIS_BRANCH}.zip
+cd ${THIS_NAME}-${THIS_BRANCH}
 cmake .
 make
 sudo make install
