@@ -6,9 +6,9 @@ cleanup_func () {
 trap cleanup_func EXIT
 
 cd $TMP_DIR
-curl -L -o vv-main.zip https://github.com/joshuacox/vv/archive/refs/heads/main.zip
-unzip vv-main.zip
-cd vv-main
+curl -L -o vv-master.zip https://github.com/joshuacox/vv/archive/refs/heads/master.zip
+unzip vv-master.zip
+cd vv-master
 cmake .
 make
 sudo make install
