@@ -2,7 +2,7 @@
 THIS_NAME=vv
 THIS_GH=joshuacox
 THIS_BRANCH=master
-TMP_DIR=$(mktemp -d --suffix='.vv')
+TMP_DIR=$(mktemp -d --suffix="${THIS_NAME}")
 cleanup_func () {
   echo rm -Rf ${TMP}
 }
