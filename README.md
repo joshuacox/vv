@@ -1,121 +1,125 @@
 # vv
-VV is a wrapper for command line tasks, it's most important feature is that it makes a noise when it is done, allowing me to background and do something else while the task completes, then I generally wrap some nice and ionice and /usr/bin/time -v into the command to make it nice and give me an idea of how long it took.  I added the time sync, to let me know how much of the above the kernel is trying to hide from me as well (of course the sync may reflect something else going on in the system, in any case I think it's a good idea to let the discs sync in general before other things commence and no need to alert me till afterwards)
 
-notes: I imagine there are some escaping issues that could be uncovered by throwing lot’s of interpretation snafu at it in $@  i.e. I imagine I’ll have to throw some escape trickery in there at some point.  I’ll fix it when I run into one of those cases, but for now I’m using this daily without issue.  I tend to escape things pretty heavily though, so I might not run into one of those cases anytime soon.
+`vv` is a wrapper for command line tasks. Its most important feature is that it makes a noise and sends a desktop notification when it is done, allowing you to background the terminal or switch to another window while long tasks complete.
+
+It runs tasks politely by automatically wrapping them in `nice` (CPU priority) and `ionice` (I/O priority), and times execution with `/usr/bin/time -v` when available. Afterwards, it runs `sync` so you know how much disk writeback the kernel buffered before you consider the task truly done.
+
+---
+
+## Features
+
+- **Exit Code Preservation**: Faithfully propagates the exit status of the wrapped command.
+- **Robust Argument Handling**: Quotes and whitespace in arguments are preserved without word-splitting.
+- **Success & Failure Alerts**: Plays different audio cues depending on whether the command succeeded or failed.
+- **Broad Audio Backend Support**: Automatically detects `canberra-gtk-play`, `paplay` (PulseAudio), `pw-play` (PipeWire), `afplay` (macOS), `aplay` (ALSA), `ogg123`, `mpv`, `ffplay`, `cvlc`, or `mplayer`, with an audible/visual terminal bell (`\a`) fallback.
+- **Desktop Notifications**: Sends desktop alerts via `notify-send` (Linux) or `osascript` (macOS) when enabled.
+- **Configurable `sync`**: Easily toggle filesystem sync on or off (`VV_SYNC=0`).
+
+---
 
 ## Install
 
-Trust me?
-
-```
+### One-liner
+```bash
 curl -sL https://raw.githubusercontent.com/joshuacox/vv/refs/heads/master/bootstrapvv.sh | bash
 ```
 
-But I recommend you clone the repo and read it first, it’s pretty short
+### Manual Install
+Clone the repository and install:
 
-then at your leisure
-
-`cp vv /usr/local/bin`
-or somewhere in your path
-
-alternatively if you want to install it to `/usr/local/bin/` then
-
+```bash
+git clone https://github.com/joshuacox/vv.git
+cd vv
+sudo install -m 0755 vv /usr/local/bin/vv
+sudo install -m 0644 man/vv.1 /usr/local/share/man/man1/vv.1
 ```
+
+Or with CMake:
+```bash
+cmake .
+make
 sudo make install
 ```
 
-or you can add hosts to a vv list in your ansible hosts file like so
-
-```
-examplehost1 ansible_ssh_port=2222 ansible_ssh_host=1.2.3.4 ansible_ssh_user=root
-examplehost2 ansible_ssh_port=2222 ansible_ssh_host=1.2.3.5 ansible_ssh_user=root
-
-[vv]
-exampleHost1
-exampleHost2
-```
-and use ansible to install to those hosts
-
-```
-make play
+Or via Nix Flakes:
+```bash
+nix profile install .
 ```
 
-look at the included Makefile (as you should every Makefile for that matter before you `sudo make anything`)
-it merely uses the install command to copy the vv script to `/usr/local/bin` with mode 0755
+---
 
 ## Usage
-just place vv at the start of your command line
-e.g.
 
-```
+Simply place `vv` at the start of your command line:
+
+```bash
 vv apt-get upgrade -y
 ```
 
-With a differing niceness:
-
+```bash
+vv make -j$(nproc)
 ```
+
+With custom niceness:
+```bash
 VV_NICENESS=10 vv echo one
 ```
 
-or (I’ll give some example output in this one)
-
-```
-vv dd if=/dev/zero of=/tmp/testfile bs=1M count=4010     
-4010+0 records in
-4010+0 records out
-4204789760 bytes (4.2 GB) copied, 0.852751 s, 4.9 GB/s
-        Command being timed: "nice ionice -c3 dd if=/dev/zero of=/tmp/testfile bs=1M count=4010"
-        User time (seconds): 0.00
-        System time (seconds): 0.87
-        Percent of CPU this job got: 99%
-        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.87
-        Average shared text size (kbytes): 0
-        Average unshared data size (kbytes): 0
-        Average stack size (kbytes): 0
-        Average total size (kbytes): 0
-        Maximum resident set size (kbytes): 2872
-        Average resident set size (kbytes): 0
-        Major (requiring I/O) page faults: 0
-        Minor (reclaiming a frame) page faults: 459
-        Voluntary context switches: 1
-        Involuntary context switches: 12
-        Swaps: 0
-        File system inputs: 0
-        File system outputs: 0
-        Socket messages sent: 0
-        Socket messages received: 0
-        Signals delivered: 0
-        Page size (bytes): 4096
-        Exit status: 0
-
-real    0m0.082s
-user    0m0.000s
-sys     0m0.012s
-
-Audio Device:   Advanced Linux Sound Architecture (ALSA) output
-
-Playing: /usr/share/sounds/KDE-Im-Irc-Event.ogg
-Ogg Vorbis stream: 2 channel, 48000 Hz
-                                                                                
-Done.
+Without post-command filesystem sync:
+```bash
+VV_SYNC=0 vv cargo build
 ```
 
-### notes, caveats, troubleshooting
-
-There are some escaping issues that can be uncovered by throwing lot’s of interpretation snafu at it in $@
-i.e. I imagine I’ll have to throw some escape trickery in there at some point.  I’ll fix it when I run into one of those cases, but for now I’m using this daily without issue.
-I’m open to suggestions on better encapsulation inside the script
-
-some examples of how it might get borked are here:
-http://unix.stackexchange.com/questions/57830/trouble-in-script-with-spaces-in-filename
-
-e.g. this works fine
-```
-vv sudo cp -a 'VirtualBox VMs' /mnt/virtualbox/
-```
-but this does not
-```
-vv sudo cp -a VirtualBox\ VMs /mnt/virtualbox/
+Arguments with spaces and quotes are fully preserved:
+```bash
+vv cp -a "VirtualBox VMs" /mnt/virtualbox/
 ```
 
-http://joshuacox.github.io/vv
+### Options
+
+```
+-h, --help       Show help message and exit
+-v, --version    Show version information and exit
+```
+
+---
+
+## Configuration
+
+`vv` reads configuration files from:
+1. `${XDG_CONFIG_HOME:-~/.config}/vv/config`
+2. `~/.vv/config`
+3. `~/.vvrc`
+
+See [`vvrc.example`](vvrc.example) for a documented sample.
+
+### Environment Variables
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `VV_NICENESS` | `19` | CPU nice level for the command |
+| `VV_IO_NICENESS` | `3` | I/O nice class/level for the command |
+| `VV_SYNC` | `1` | Run `sync` after command (`0` to disable) |
+| `VV_NOTIFY` | `1` | Send desktop notifications via `notify-send`/`osascript` (`0` to disable) |
+| `VV_BELL` | `1` | Emit terminal bell if no audio player or sound file is found (`0` to disable) |
+| `VV_PLAYER` | *(auto)* | Audio player command (e.g. `aplay -q`, `paplay`, `pw-play`, `mpv`) |
+| `VV_PLAYFILE` | *(auto)* | Sound file to play (overrides success/failure defaults) |
+| `VV_SUCCESS_SOUND` | *(auto)* | Sound file to play on successful command exit (`0`) |
+| `VV_FAILURE_SOUND` | *(auto)* | Sound file to play on non-zero command exit |
+| `VV_PRE` | *(auto)* | Custom command prefix (overrides automatic `nice`/`ionice`/`time`) |
+
+---
+
+## Testing
+
+Run the included test suite:
+
+```bash
+./test/run_tests.sh
+```
+
+Or with [Bats](https://github.com/bats-core/bats-core):
+
+```bash
+bats test/test.bats
+```
