@@ -44,6 +44,23 @@ export default function RootLayout({
       <head>
         <meta name="google-adsense-account" content="ca-pub-8973108060277483" />
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔊</text></svg>" />
+        
+        {/* Google tag (gtag.js) */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-L1H2CLH4R3"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-L1H2CLH4R3');
+          `}
+        </Script>
+
         {/* Google AdSense Main Tag */}
         <Script
           id="google-adsense"
